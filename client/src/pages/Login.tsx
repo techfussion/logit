@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "../components/Button";
+import { Link } from "react-router-dom";
 
 const Login: React.FC = () => {
     return (
@@ -19,7 +20,7 @@ const Login: React.FC = () => {
                         <Button text="Google" outline onClick={() => {}} />
                         <Button text="Facebook" outline onClick={() => {}} />
                     </div>
-                    <p className="text-xs text-textGray1 my-5 mx-auto w-max">Don't have an account? <span className="text-xs text-textBlue1">Sign Up</span></p>
+                    <p className="text-xs text-textGray1 my-5 mx-auto w-max">Don't have an account? <Link className="text-xs text-textBlue1" to='/signup'>Sign Up</Link></p>
                 </div>
             </div>
             <p className="text-xs text-textGray2 absolute bottom-1">&copy; Logit. All rights reserved</p>
