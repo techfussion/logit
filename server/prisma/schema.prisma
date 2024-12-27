@@ -1,0 +1,107 @@
+// schema.prisma
+
+// Prisma Client Configuration
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum Role {
+  STUDENT
+  INDUSTRY_SUPERVISOR
+  SCHOOL_SUPERVISOR
+}
+
+// Models
+model User {
+  id                          String              @id @default(uuid())
+  email                       String              @unique
+  password                    String
+  role                        Role
+  studentProfile              Student?
+  industrySupervisorProfile   IndustrySupervisor?
+  schoolSupervisorProfile     SchoolSupervisor?
+  feedbackSubmitted           Feedback[]
+  createdAt                   DateTime            @default(now())
+}
+
+model Student {
+  id                    String                @id @default(uuid())
+  firstName             String
+  middleName            String?
+  lastName              String
+  institution           String?
+  faculty               String?
+  department            String?
+  matricNo              String                @unique
+  userId                String                @unique
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logEntries            LogEntry[]
+  industrySupervisor    IndustrySupervisor?  @relation("StudentIndustrySupervisor", fields: [industrySupervisorId], references: [id])
+  industrySupervisorId  String?
+  schoolSupervisor      SchoolSupervisor?    @relation("StudentSchoolSupervisor", fields: [schoolSupervisorId], references: [id])
+  schoolSupervisorId    String?
+  createdAt             DateTime              @default(now())
+
+  @@index([industrySupervisorId])
+  @@index([schoolSupervisorId])
+}
+
+model IndustrySupervisor {
+  id                    String    @id @default(uuid())
+  firstName             String
+  middleName            String?
+  lastName              String
+  companyName           String
+  position              String
+  userId                String    @unique
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  feedback              Feedback[]
+  supervisedStudents    Student[] @relation("StudentIndustrySupervisor")
+  createdAt             DateTime  @default(now())
+}
+
+model SchoolSupervisor {
+  id                    String    @id @default(uuid())
+  firstName             String
+  middleName            String?
+  lastName              String
+  faculty               String
+  position              String
+  userId                String    @unique
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  feedback              Feedback[]
+  supervisedStudents    Student[] @relation("StudentSchoolSupervisor")
+  createdAt             DateTime  @default(now())
+}
+
+model Feedback {
+  id                    String              @id @default(uuid())
+  content               String
+  submittedById         String
+  submittedBy           User                @relation(fields: [submittedById], references: [id])
+  logEntryId            String?
+  logEntry              LogEntry?           @relation(fields: [logEntryId], references: [id], onDelete: Cascade)
+  industrySupervisorId  String?
+  industrySupervisor    IndustrySupervisor? @relation(fields: [industrySupervisorId], references: [id])
+  schoolSupervisorId    String?
+  schoolSupervisor      SchoolSupervisor?   @relation(fields: [schoolSupervisorId], references: [id])
+  createdAt             DateTime            @default(now())
+}
+
+model LogEntry {
+  id                    String     @id @default(uuid())
+  description           String
+  studentId             String
+  student               Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  feedback              Feedback[]
+  clockInTime           DateTime
+  logWeek               Int
+  logDay                String
+  createdAt             DateTime   @default(now())
+}
