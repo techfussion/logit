@@ -15,7 +15,7 @@ import Logs from '@/pages/logs/Logs';
 import LogsWithReview from '@/pages/reviews/Logs';
 import Supervisors from '@/pages/supervisors/Supervisors';
 import Profile from './pages/profile/Profile';
-import { DataProvider } from './context/dataContext';
+import { DataProvider } from './context/DataContext';
 
 
 const App: React.FC = () => {
