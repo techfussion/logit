@@ -2,35 +2,30 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { CheckCircle, LucidePhone, ArrowRight, FileText } from "lucide-react"
 import { Link } from "react-router-dom"
-import { Dialog, DialogContent, DialogOverlay, DialogTrigger } from "@radix-ui/react-dialog"
-import { useState } from "react"
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
 import Login from "@/components/layout/Login"
 import Signup from "@/components/layout/Signup"
 import EngineSnapShot from '@/assets/original-0f71f5b17597b9cff0947d2ffc082b30.png'
 
 export default function Component() {
-  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
-  const [signupDialogOpen, setSignupDialogOpen] = useState(false);
   return (
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-14 flex items-center">
         <span className="ml-2 text-2xl font-bold">logit</span>
         <div className="ml-auto flex gap-4 sm:gap-6">
-        <Dialog open={loginDialogOpen} onOpenChange={setLoginDialogOpen}>
-          <DialogTrigger asChild>
+        <Dialog>
+          <DialogTrigger>
             <Button variant="ghost" size="sm">Login</Button>
           </DialogTrigger>
-          <DialogOverlay className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" />
-          <DialogContent className="fixed inset-0 flex items-center justify-center p-4">
+          <DialogContent>
             <Login />
           </DialogContent>
         </Dialog>
-        <Dialog open={signupDialogOpen} onOpenChange={setSignupDialogOpen}>
-          <DialogTrigger asChild>
+        <Dialog>
+          <DialogTrigger>
             <Button size="sm">Sign Up</Button>
           </DialogTrigger>
-          <DialogOverlay className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" />
-          <DialogContent className="fixed inset-0 flex items-center justify-center p-4">
+          <DialogContent>
             <Signup />
           </DialogContent>
         </Dialog>
@@ -50,17 +45,14 @@ export default function Component() {
                     digital logbook solution.
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Dialog open={signupDialogOpen} onOpenChange={setSignupDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button size="sm" className="inline-flex items-center justify-center bg-customBlue1">Get Started<ArrowRight className="ml-2 h-4 w-4" /></Button>
-                    </DialogTrigger>
-                    <DialogOverlay className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" />
-                    <DialogContent className="fixed inset-0 flex items-center justify-center p-4">
-                      <Signup />
-                    </DialogContent>
-                  </Dialog>
-                </div>
+                <Dialog>
+                  <DialogTrigger>
+                    <Button size="sm" className="inline-flex items-center justify-center bg-customBlue1">Get Started<ArrowRight className="ml-2 h-4 w-4" /></Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <Signup />
+                  </DialogContent>
+                </Dialog>
               </div>
               <div className="flex items-center justify-center">
                 <img

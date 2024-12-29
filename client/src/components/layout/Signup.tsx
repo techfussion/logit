@@ -90,7 +90,7 @@ const Signup: React.FC = () => {
         </p>
 
         {/* Form */}
-        <div className="max-h-96 overflow-y-auto px-1">
+        <div className="max-h-80 overflow-y-auto px-1">
             <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
                 {/* Firstname Field */}
