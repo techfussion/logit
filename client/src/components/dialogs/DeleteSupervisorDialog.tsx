@@ -15,9 +15,10 @@ import { Button } from '../ui/button';
 
 interface DeleteSupervisorDialogProps {
     id: string;
+    onDelete?: () => void;
 }
 
-const DeleteSupervisorDialog: React.FC<DeleteSupervisorDialogProps> = ({ id }) => {
+const DeleteSupervisorDialog: React.FC<DeleteSupervisorDialogProps> = ({ id, onDelete }) => {
     const [deleting, setDeleting] = useState(false);
     const { toast } = useToast();
   
@@ -33,7 +34,10 @@ const DeleteSupervisorDialog: React.FC<DeleteSupervisorDialogProps> = ({ id }) =
         
         toast({
           description: "Supervisor removed successfully",
-        }) 
+        })
+
+        // call the after action callback
+        onDelete?.()
       } catch (error: any) {
         toast({
           variant: "destructive",

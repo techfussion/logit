@@ -61,7 +61,7 @@ const Supervisors: React.FC = () => {
         <div className="pb-2 px-24 w-full flex flex-col">
             <Header />
             <div className="mt-6 space-y-6">
-                <AddSupervisorDialog />
+                <AddSupervisorDialog onAdd={getSupervisors}/>
                 <div className="flex justify-center items-center h-full">
                     <div className='flex flex-col items-center'>
                         <p className="text-sm text-gray-400 mb-6 font-keyphodo">You haven't added any supervisor</p>
@@ -77,7 +77,7 @@ const Supervisors: React.FC = () => {
         <div className="pb-2 px-24 w-full flex flex-col">
             <Header />
             <div className="mt-6 space-y-6">
-                <AddSupervisorDialog />
+                <AddSupervisorDialog onAdd={getSupervisors} />
                 <Table>
                     <TableHeader>
                     <TableRow>
@@ -94,7 +94,7 @@ const Supervisors: React.FC = () => {
                         <TableCell>{supervisor.companyName || supervisor.faculty}</TableCell>
                         <TableCell>{supervisor.position}</TableCell>
                         <TableCell>
-                            <DeleteSupervisorDialog id={supervisor.userId}/>
+                            <DeleteSupervisorDialog onDelete={getSupervisors} id={supervisor.userId}/>
                         </TableCell>
                         </TableRow>
                     ))}

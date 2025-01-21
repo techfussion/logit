@@ -13,6 +13,8 @@ import { REACT_APP_API_BASE } from "@/global/global"
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '../ui/button';
 import { Trash } from 'lucide-react';
+import { useDataOperations } from '@/hooks/useDataOperations';
+
 
 interface DeleteLogDialogProps {
     id: string;
@@ -21,7 +23,12 @@ interface DeleteLogDialogProps {
 const DeleteLogDialog: React.FC<DeleteLogDialogProps> = ({ id }) => {
     const [deleting, setDeleting] = useState(false);
     const { toast } = useToast();
-  
+    const { state, fetchLogs } = useDataOperations();
+
+    const handleRefetch = () => {
+      fetchLogs();
+    }
+
     const onSubmit = async () => {
       try {
         setDeleting(true);
@@ -35,6 +42,7 @@ const DeleteLogDialog: React.FC<DeleteLogDialogProps> = ({ id }) => {
         toast({
           description: "Log removed successfully",
         }) 
+        handleRefetch();
       } catch (error: any) {
         toast({
           variant: "destructive",

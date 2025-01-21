@@ -20,6 +20,8 @@ import { Edit, Plus } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '../ui/select';
 import { SelectValue } from '@radix-ui/react-select';
 import { Textarea } from '../ui/textarea';
+import { useDataOperations } from '@/hooks/useDataOperations';
+
 
 const formSchema = z.object({
     description: z.string().min(10, { message: "Log content must be more than 10 characters" }),
@@ -62,11 +64,17 @@ interface AddLogDialogProps {
 const AddLogDialog: React.FC<AddLogDialogProps> = ({ mode, log }) => {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
+    const { state, fetchLogs } = useDataOperations();
+
   
     const form = useForm<AddSupervisorFormData>({
       resolver: zodResolver(formSchema),
       mode: "onChange",
     });
+
+    const handleRefetch = () => {
+        fetchLogs();
+    }
   
     const onSubmit: SubmitHandler<AddSupervisorFormData> = async (data) => {
       try {
@@ -89,6 +97,7 @@ const AddLogDialog: React.FC<AddLogDialogProps> = ({ mode, log }) => {
         toast({
           description: "Log added successfully",
         }) 
+        handleRefetch()
       } catch (error: any) {
         toast({
           variant: "destructive",

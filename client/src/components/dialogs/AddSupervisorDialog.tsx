@@ -29,9 +29,10 @@ type AddSupervisorFormData = z.infer<typeof formSchema>;
 
 interface AddSupervisorDialogProps {
   className?: string;
+  onAdd?: () => void;
 }
 
-const AddSupervisorDialog: React.FC<AddSupervisorDialogProps> = ({ className }) => {
+const AddSupervisorDialog: React.FC<AddSupervisorDialogProps> = ({ className, onAdd }) => {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
   
@@ -58,7 +59,10 @@ const AddSupervisorDialog: React.FC<AddSupervisorDialogProps> = ({ className }) 
 
         toast({
           description: "Supervisor added successfully",
-        }) 
+        })
+
+        // call the after action callback
+        onAdd?.()
       } catch (error: any) {
         toast({
           variant: "destructive",
