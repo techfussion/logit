@@ -21,8 +21,8 @@ import {
     @UseGuards(JwtAuthGuard)
     @Get()
     getAllUserLogs(@Req() req: Request & { user: any}) {
-        const studentId = req.user.sub;
-        return this.logService.getAllUserLogs(studentId);
+        const userId = req.user.sub;
+        return this.logService.getAllUserLogs(userId);
     }
   
     @UseGuards(JwtAuthGuard)

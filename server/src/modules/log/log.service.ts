@@ -33,16 +33,19 @@ export class LogService {
 
   async getAllUserLogs(userId: string) {
     try {
-      const student = await this.prisma.student.findFirst({
-        where: { userId },
+      const { studentProfile } = await this.prisma.user.findFirst({
+        where: { id: userId },
+        select: {
+          studentProfile: true,
+        }
       });
 
-      if (!student) {
+      if (!studentProfile) {
         throw new NotFoundException(`Student with userId ${userId} not found`);
       }
 
       const logs = await this.prisma.logEntry.findMany({
-        where: { studentId: student.id },
+        where: { studentId: studentProfile.id },
         orderBy: {
           logWeek: 'asc',
         },
