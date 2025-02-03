@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, ConflictException, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, ConflictException, NotFoundException } from "@nestjs/common";
 import {JwtService} from '@nestjs/jwt';
 import * as argon from 'argon2';
 import { Prisma, Role } from '@prisma/client';
@@ -34,7 +34,7 @@ export class AuthService {
         // Validate password
         const isPasswordValid = await argon.verify(user.password, password);
         if (!isPasswordValid) {
-          throw new UnauthorizedException('Invalid email or password');
+          throw new NotFoundException('Invalid email or password');
         }
     
         // Generate JWT Token

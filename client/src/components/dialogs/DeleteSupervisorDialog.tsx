@@ -8,8 +8,7 @@ import {
     DialogTitle,
     DialogTrigger,
   } from "@/components/ui/dialog"
-import axios from "axios";
-import { REACT_APP_API_BASE } from "@/global/global"
+import apiClient from '@/interceptor/axios.interceptor';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '../ui/button';
 
@@ -26,7 +25,7 @@ const DeleteSupervisorDialog: React.FC<DeleteSupervisorDialogProps> = ({ id, onD
       try {
         setDeleting(true);
 
-        await axios.delete(`${REACT_APP_API_BASE}/user/supervisor/${id}`, {
+        await apiClient.delete(`/user/supervisor/${id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }

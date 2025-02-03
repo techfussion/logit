@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import EditProfileDialog from '@/components/dialogs/EditProfileDialog';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import Header from '@/components/layout/Header';
@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 const Profile: React.FC = () => {
     const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user') || '{}'));
     const { email, role, profile } = user;
-    const { firstName, middleName, lastName, matricNo, institution, faculty, department, createdAt } = profile;
+    const { firstName, middleName, lastName, matricNo, institution, faculty, department, createdAt, companyName, position } = profile;
 
     const handleProfileUpdate = (updatedProfile: any) => {
         setUser((prevUser: any) => ({
@@ -35,18 +35,24 @@ const Profile: React.FC = () => {
                         <p className="text-xs"><strong>Email:</strong> {email}</p>
                         <p className="text-xs"><strong>Role:</strong> {role}</p>
                         {role === "STUDENT" && (
-                            <>
+                            <Fragment>
                                 <p className="text-xs"><strong>Matric Number:</strong> {matricNo}</p>
                                 <p className="text-xs"><strong>Institution:</strong> {institution || 'null'}</p>
                                 <p className="text-xs"><strong>Faculty:</strong> {faculty || 'null'}</p>
                                 <p className="text-xs"><strong>Department:</strong> {department || 'null'}</p>
-                            </>
+                            </Fragment>
                         )}
-                        {role === "IDUSTRY_SUPERVISOR" && (
-                            <p className="text-xs"><strong>Role:</strong> Industry Supervisor</p>
+                        {role === "INDUSTRY_SUPERVISOR" && (
+                            <Fragment>
+                                <p className="text-xs"><strong>Company:</strong> {companyName || 'null'}</p>
+                                <p className="text-xs"><strong>Position:</strong> {position || 'null'}</p>
+                            </Fragment>
                         )}
                         {role === "SCHOOL_SUPERVISOR" && (
-                            <p className="text-xs"><strong>Role:</strong> School Supervisor</p>
+                            <Fragment>
+                                <p className="text-xs"><strong>Faculty:</strong>{faculty || 'null'}</p>
+                                <p className="text-xs"><strong>Position:</strong>{position || 'null'}</p>
+                            </Fragment>
                         )}
                         <p className="text-xs"><strong>Profile Created:</strong> {new Date(createdAt).toLocaleDateString()}</p>
                     </div>

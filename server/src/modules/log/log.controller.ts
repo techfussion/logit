@@ -1,4 +1,5 @@
 import { 
+  BadRequestException,
     Body, 
     Controller, 
     Delete, 
@@ -23,6 +24,15 @@ import {
     getAllUserLogs(@Req() req: Request & { user: any}) {
         const userId = req.user.sub;
         return this.logService.getAllUserLogs(userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(':id')
+    getLogsForSupervisor(@Req() req: Request & { user: any }, @Param('id') id: string) {
+        const userId = req.user.sub;
+
+        // userId - the current user, id - the target student/intern
+        return this.logService.getLogsForSupervisor(userId, id);
     }
   
     @UseGuards(JwtAuthGuard)

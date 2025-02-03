@@ -11,8 +11,7 @@ import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-import axios from "axios";
-import { REACT_APP_API_BASE } from "@/global/global"
+import apiClient from '@/interceptor/axios.interceptor';
 import { useToast } from "@/hooks/use-toast";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Button } from '../ui/button';
@@ -46,12 +45,12 @@ const AddSupervisorDialog: React.FC<AddSupervisorDialogProps> = ({ className, on
         setLoading(true);
 
         data.role === "SCHOOL_SUPERVISOR"
-          ? await axios.patch(`${REACT_APP_API_BASE}/user/supervisor/school`, data, {
+          ? await apiClient.patch(`/user/supervisor/school`, data, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`
             }
           })
-          : await axios.patch(`${REACT_APP_API_BASE}/user/supervisor/industry`, data, {
+          : await apiClient.patch(`/user/supervisor/industry`, data, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`
             }

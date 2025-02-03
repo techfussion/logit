@@ -25,6 +25,15 @@ export class FeedbackController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Get(':id')
+    getFeedbacksForSupervisor(@Req() req: Request & { user: any }, @Param('id') id: string) {
+        const userId = req.user.sub;
+
+        // userId - the current user, id - the target student/intern
+        return this.feedbackService.getFeedbacksForSupervisor(userId, id);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Post()
     createFeedback(@Body() createFeedbackDto: CreateFeedbackDto) {
         return this.feedbackService.createFeedback(createFeedbackDto);

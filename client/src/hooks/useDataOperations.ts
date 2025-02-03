@@ -1,6 +1,5 @@
 import { useData } from '@/context/DataContext';
-import { REACT_APP_API_BASE } from '@/global/global';
-import axios from 'axios';
+import apiClient from '@/interceptor/axios.interceptor';
 
 const authorize = {
   headers: {
@@ -11,11 +10,11 @@ const authorize = {
 export function useDataOperations() {
   const { state, dispatch } = useData();
 
-  const fetchLogs = async () => {
+  const fetchLogs = async (id?: string) => {
     try {
       dispatch({ type: 'SET_LOGS_LOADING', payload: true });
 
-      const response = await axios.get(`${REACT_APP_API_BASE}/log`, {...authorize});
+      const response = await apiClient.get(id ? `/log/${id}` : `/log`, {...authorize});
 
       dispatch({ type: 'SET_LOGS', payload: { items: response.data } });
     } catch (error) {
@@ -29,11 +28,11 @@ export function useDataOperations() {
     }
   };
 
-  const fetchReviews = async () => {
+  const fetchReviews = async (id?: string) => {
     try {
       dispatch({ type: 'SET_REVIEWS_LOADING', payload: true });
 
-      const response = await axios.get(`${REACT_APP_API_BASE}/feedback`, {...authorize});
+      const response = await apiClient.get(id ? `/feedback/${id}` : `/feedback`, {...authorize});
 
       dispatch({ type: 'SET_REVIEWS', payload: { items: response.data } });
     } catch (error) {

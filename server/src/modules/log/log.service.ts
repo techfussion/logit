@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
+import { Injectable, NotFoundException, BadRequestException, UnauthorizedException } from "@nestjs/common";
 import { CreateLogDto, UpdateLogDto } from "./dto/log.dto";
 import { PrismaService } from "../prisma/prisma.service";
 import { Prisma } from "@prisma/client";
@@ -61,6 +61,69 @@ export class LogService {
       }, {});
 
       return groupedLogs;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new BadRequestException('Database operation failed');
+      }
+      throw error;
+    }
+  }
+
+  async getLogsForSupervisor(userId: string, studentId: string) {
+    try {
+      // Fetch student and supervisor details in a single call
+      const studentData = await this.prisma.student.findUnique({
+        where: { id: studentId },
+        select: {
+          userId: true,
+          user: {
+            select: {
+              studentProfile: {
+                select: {
+                  id: true,
+                  industrySupervisorId: true,
+                  schoolSupervisorId: true,
+                },
+              },
+            },
+          },
+        },
+      });
+  
+      if (!studentData?.user?.studentProfile) {
+        throw new NotFoundException(`Student with ID ${studentId} not found`);
+      }
+  
+      const { industrySupervisorId, schoolSupervisorId, id: profileId } = studentData.user.studentProfile;
+  
+      // Fetch supervisor data
+      const supervisorData = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          industrySupervisorProfile: { select: { id: true } },
+          schoolSupervisorProfile: { select: { id: true } },
+        },
+      });
+  
+      if (
+        !supervisorData ||
+        (supervisorData.industrySupervisorProfile?.id !== industrySupervisorId &&
+          supervisorData.schoolSupervisorProfile?.id !== schoolSupervisorId)
+      ) {
+        throw new UnauthorizedException('You do not have access to this resource');
+      }
+  
+      // Fetch and group logs by logWeek
+      const logs = await this.prisma.logEntry.findMany({
+        where: { studentId: profileId },
+        orderBy: { logWeek: 'asc' },
+      });
+  
+      return logs.reduce((acc, log) => {
+        if (!acc[log.logWeek]) acc[log.logWeek] = [];
+        acc[log.logWeek].push(log);
+        return acc;
+      }, {});
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         throw new BadRequestException('Database operation failed');

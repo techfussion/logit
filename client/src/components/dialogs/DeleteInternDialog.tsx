@@ -11,37 +11,32 @@ import {
 import apiClient from '@/interceptor/axios.interceptor';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '../ui/button';
-import { Trash } from 'lucide-react';
-import { useDataOperations } from '@/hooks/useDataOperations';
 
-
-interface DeleteLogDialogProps {
+interface DeleteInternDialogProps {
     id: string;
+    onDelete?: () => void;
 }
 
-const DeleteLogDialog: React.FC<DeleteLogDialogProps> = ({ id }) => {
+const DeleteInternDialog: React.FC<DeleteInternDialogProps> = ({ id, onDelete }) => {
     const [deleting, setDeleting] = useState(false);
     const { toast } = useToast();
-    const { state, fetchLogs } = useDataOperations();
-
-    const handleRefetch = () => {
-      fetchLogs();
-    }
-
+  
     const onSubmit = async () => {
       try {
         setDeleting(true);
 
-        await apiClient.delete(`/log/${id}`, {
+        await apiClient.delete(`/user/intern/${id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
         })
         
         toast({
-          description: "Log removed successfully",
-        }) 
-        handleRefetch();
+          description: "Intern removed successfully",
+        })
+
+        // call the after action callback
+        onDelete?.()
       } catch (error: any) {
         toast({
           variant: "destructive",
@@ -55,13 +50,13 @@ const DeleteLogDialog: React.FC<DeleteLogDialogProps> = ({ id }) => {
     return (
         <Dialog>
         <DialogTrigger>
-            <Trash size={16} className='cursor-pointer text-red-400 hover:text-red-600' />
+            <Button variant="link" className="font-kayphodo pl-0 rounded-none underline text-xs text-red-500 hover:text-red-600">Remove Intern</Button>
         </DialogTrigger>
         <DialogContent>
             <DialogHeader>
                 <DialogTitle className="text-sm">Are you sure?</DialogTitle>
                 <DialogDescription className="text-xs">
-                    Do you want to delete this log entry?
+                    Do you want to remove this intern?
                 </DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -71,7 +66,7 @@ const DeleteLogDialog: React.FC<DeleteLogDialogProps> = ({ id }) => {
                     onClick={onSubmit}
                 >
                     {
-                        deleting ? 'Deleting...' : 'Delete'
+                        deleting ? 'Removing...' : 'Remove'
                     }
                 </Button>
             </DialogFooter>
@@ -80,4 +75,4 @@ const DeleteLogDialog: React.FC<DeleteLogDialogProps> = ({ id }) => {
     )
 }
 
-export default DeleteLogDialog;
+export default DeleteInternDialog;

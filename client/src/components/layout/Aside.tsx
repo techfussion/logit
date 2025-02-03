@@ -9,15 +9,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import { menuItemsByRole } from "@/global/global";
 import { Button } from "../ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { Bell } from "lucide-react";
 import AddSupervisorDialog from "../dialogs/AddSupervisorDialog";
 import EditProfileDialog from "../dialogs/EditProfileDialog";
 
@@ -30,8 +24,6 @@ const Aside: React.FC<AsideProps> = ({ role }) => {
   const { logout } = useAuth();
   const location = useLocation();
   const menuItems = menuItemsByRole[role] || [];
-
-  const notificationCount = 1;
 
   return (
     <Sidebar>
@@ -59,13 +51,10 @@ const Aside: React.FC<AsideProps> = ({ role }) => {
             <h3 className="ml-2 mb-3 mt-6 text-sm font-kayphodo">Quick Settings</h3>
             <SidebarMenu>
               <SidebarMenuItem>
-                {role === 'STUDENT' ? (
+                {role === 'STUDENT' && (
                   <div className="ml-2">
                     <AddSupervisorDialog className="no-underline"/>
                   </div>
-                  )
-                  : (
-                    <Button variant="link" className="w-max pl-2 text-xs text-gray-500 font-kayphodo hover:underline">Add Interns</Button>
                   )
                 }
               </SidebarMenuItem>

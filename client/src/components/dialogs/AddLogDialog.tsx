@@ -11,8 +11,7 @@ import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-import axios from "axios";
-import { REACT_APP_API_BASE } from "@/global/global"
+import apiClient from '@/interceptor/axios.interceptor';
 import { useToast } from "@/hooks/use-toast";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Button } from '../ui/button';
@@ -82,13 +81,13 @@ const AddLogDialog: React.FC<AddLogDialogProps> = ({ mode, log }) => {
 
         mode !== 'edit' 
             ?
-                await axios.post(`${REACT_APP_API_BASE}/log`, {...data, logWeek: parseInt(data.logWeek), clockInTime: new Date()}, {
+                await apiClient.post(`/log`, {...data, logWeek: parseInt(data.logWeek), clockInTime: new Date()}, {
                     headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
                 })
             :
-                await axios.patch(`${REACT_APP_API_BASE}/log/${log?.id}`, {...data, logWeek: parseInt(data.logWeek)}, {
+                await apiClient.patch(`/log/${log?.id}`, {...data, logWeek: parseInt(data.logWeek)}, {
                     headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                     }

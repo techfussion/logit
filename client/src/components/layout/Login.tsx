@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import axios from "axios";
+import apiClient from "@/interceptor/axios.interceptor";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormField, FormItem, FormControl, FormLabel, FormMessage } from "@/components/ui/form";
-import { REACT_APP_API_BASE } from "@/global/global";
 import { useToast } from "@/hooks/use-toast";
 
 // Define validation schema with Zod
@@ -34,7 +33,7 @@ const Login: React.FC = () => {
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     try {
       setLoading(true);
-      const response = await axios.post(`${REACT_APP_API_BASE}/auth/login`, data);
+      const response = await apiClient.post(`/auth/login`, data);
 
       // Extract token and user data
       const { token, user } = response.data;

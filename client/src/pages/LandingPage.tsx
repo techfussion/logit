@@ -160,7 +160,7 @@ export default function Component() {
                 <form className="flex space-x-2">
                   <Input className="max-w-lg flex-1 bg-primary-foreground text-primary" placeholder="Enter your email" type="email" />
                   <Button type="submit" variant="secondary" className="bg-customBlue1">
-                    Sign Up
+                    Send invitation
                   </Button>
                 </form>
                 <p className="text-xs text-primary-foreground/90">

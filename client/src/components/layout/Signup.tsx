@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import apiClient from "@/interceptor/axios.interceptor";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormField, FormItem, FormControl, FormLabel, FormMessage } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { REACT_APP_API_BASE } from "@/global/global";
 import { useToast } from "@/hooks/use-toast";
 
 // Define validation schema with Zod
@@ -61,7 +60,7 @@ const Signup: React.FC = () => {
   const onSubmit: SubmitHandler<SignupFormData> = async (data) => {
     try {
         setLoading(true);
-        const response = await axios.post(`${REACT_APP_API_BASE}/auth/register`, data);
+        const response = await apiClient.post(`/auth/register`, data);
 
         // Extract token and user data
         const { token, user } = response.data;

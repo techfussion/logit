@@ -3,8 +3,7 @@ import DashboardLayout from "@/components/layout/DashboardLayout"
 import Header from "@/components/layout/Header"
 import { useEffect, useState } from "react"
 import AddSupervisorDialog from "@/components/dialogs/AddSupervisorDialog"
-import axios from "axios"
-import { REACT_APP_API_BASE } from "@/global/global"
+import apiClient from "@/interceptor/axios.interceptor"
 import DeleteSupervisorDialog from "@/components/dialogs/DeleteSupervisorDialog"
 
 interface Supervisor {
@@ -27,7 +26,7 @@ const Supervisors: React.FC = () => {
   const getSupervisors = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${REACT_APP_API_BASE}/user/supervisor`, {
+      const response = await apiClient.get(`/user/supervisor`, {
         headers: {
             Authorization: `Bearer ${token}`
             }

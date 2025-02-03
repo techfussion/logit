@@ -41,12 +41,12 @@ export const menuItemsByRole = {
       },
       {
         title: "Intern Logs",
-        url: "/engine/logs",
+        url: "/engine/interns-logs",
         icon: "🗂",
       },
       {
         title: "My Reviews",
-        url: "/engine/reviews",
+        url: "/engine/supervisor-industry-reviews",
         icon: "📝",
       },
       {
@@ -68,12 +68,12 @@ export const menuItemsByRole = {
       },
       {
         title: "Student Logs",
-        url: "/engine/logs",
+        url: "/engine/students-logs",
         icon: "🗂",
       },
       {
         title: "Student Reviews",
-        url: "/engine/reviews",
+        url: "/engine/supervisor-school-reviews",
         icon: "📝",
       },
       {

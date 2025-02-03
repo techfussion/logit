@@ -65,6 +65,7 @@ const Reviews: React.FC = () => {
                             key={logEntryId} 
                             logEntryId={logEntryId} 
                             reviews={Array.isArray(reviewsArray) ? reviewsArray : []} 
+                            actor='SCHOOL_SUPERVISOR'
                         />
                         ))}
                     </div>

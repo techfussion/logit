@@ -36,40 +36,93 @@ export class UserService {
     };
 
     async getOverview(userId: string, role: string) {
-        // try {
-        //     let profile;
-            
-        //     if (role === "STUDENT") {
-        //       const { studentProfile } = await this.prisma.user.findUnique({
-        //         where: { id: userId },
-        //         select: {
-        //           studentProfile: true,
-        //         }
-
-        //         profile = studentProfile;
-        //       });
-
-        //       // overview - number of supervisors, number of logs, number of feedbacks
+        try {            
+            if (role === "STUDENT") {
+              const { studentProfile } = await this.prisma.user.findUnique({
+                where: { id: userId },
+                select: {
+                  studentProfile: true,
+                }
+              });
               
-        //       const student = await this.prisma.student.findUnique({
-        //           where: { studentProfile?.id },
-        //           include: {
-        //               industrySupervisor: true,
-        //               schoolSupervisor: true,
-        //               logEntries: true,
-        //               feedbacks: true
-        //           }
-        //       });
-        //     } else if (role === "INDUSTRY_SUPERVISOR") {
+              // get the number of logweeks filled
+              const logWeeks = await this.prisma.logEntry.findMany({
+                where: { studentId: studentProfile.id },
+                select: { logWeek: true }
+              });
 
-        //     } else if (role === "SCHOOL_SUPERVISOR") { 
-        //     }
-        //     throw new NotFoundException(`Role ${role} not recognized`);
-        // } catch (error) {
-        //     throw new Error(`Failed to fetch overview: ${error.message}`);
-        // }
+              // get the number of logs with feedback
+              const feedbacks = await this.prisma.feedback.findMany({
+                where: { logEntry: { studentId: studentProfile.id } }
+              });
 
-        return "Nothing to show";
+              return {
+                supervisors: +!!studentProfile.industrySupervisorId + +!!studentProfile.schoolSupervisorId,
+                totalLogs: logWeeks.length,
+                totalFeedbacks: feedbacks.length
+              };
+            } else if (role === "INDUSTRY_SUPERVISOR") {
+              const { industrySupervisorProfile } = await this.prisma.user.findUnique({
+                where: { id: userId },
+                select: {
+                  industrySupervisorProfile: true,
+                }
+              });
+
+              // get the number of interns supervised
+              const interns = await this.prisma.student.findMany({
+                where: { industrySupervisorId: industrySupervisorProfile.id }
+              });
+
+              // get the number of logs filled by interns
+              const logs = await this.prisma.logEntry.findMany({
+                where: { student: { industrySupervisorId: industrySupervisorProfile.id } }
+              });
+
+              // get the number of feedbacks submitted
+              const feedbacks = await this.prisma.feedback.findMany({
+                where: { industrySupervisorId: industrySupervisorProfile.id }
+              });
+
+              return {
+                interns: interns.length,
+                totalLogs: logs.length,
+                totalFeedbacks: feedbacks.length
+              };
+            } else if (role === "SCHOOL_SUPERVISOR") { 
+              const { schoolSupervisorProfile } = await this.prisma.user.findUnique({
+                where: { id: userId },
+                select: {
+                  schoolSupervisorProfile: true,
+                }
+              });
+
+              // get the number of students supervised
+              const students = await this.prisma.student.findMany({
+                where: { schoolSupervisorId: schoolSupervisorProfile.id }
+              });
+
+              // get the number of logs filled by students
+              const logs = await this.prisma.logEntry.findMany({
+                where: { student: { schoolSupervisorId: schoolSupervisorProfile.id } }
+              });
+
+              // get the number of feedbacks submitted
+              const feedbacks = await this.prisma.feedback.findMany({
+                where: { schoolSupervisorId: schoolSupervisorProfile.id }
+              });
+
+              return {
+                students: students.length,
+                totalLogs: logs.length,
+                totalFeedbacks: feedbacks.length
+              };
+            }
+
+            throw new NotFoundException(`Role ${role} not recognized`);
+        } catch (error) {
+            throw new Error(`Failed to fetch overview: ${error.message}`);
+        }
     }
    
     async getProfileDetails(id: string, role: Role) {

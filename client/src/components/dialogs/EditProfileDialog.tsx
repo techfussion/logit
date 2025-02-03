@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -11,8 +11,7 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import axios from 'axios';
-import { REACT_APP_API_BASE } from '@/global/global';
+import apiClient from '@/interceptor/axios.interceptor';
 import { useToast } from '@/hooks/use-toast';
 import { Form, FormControl, FormField, FormItem, FormMessage, FormLabel } from '@/components/ui/form';
 import { Button } from '../ui/button';
@@ -26,31 +25,34 @@ const formSchema = z.object({
     institution: z.string().optional(),
     faculty: z.string().optional(),
     department: z.string().optional(),
+    company: z.string().optional(),
+    position: z.string().optional(),
 });
 
-type AddSupervisorFormData = z.infer<typeof formSchema>;
+type EditProfileFormData = z.infer<typeof formSchema>;
 
 interface EditProfileDialogProps {
-    onUpdateProfile: (updatedProfile: any) => void;
+    onUpdateProfile?: (updatedProfile: any) => void;
     triggerButton?: React.ReactNode;
 }
 
 const EditProfileDialog: React.FC<EditProfileDialogProps> = ({ onUpdateProfile, triggerButton }) => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const token = localStorage.getItem('token') || '';
+    const role = user.role || '';
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const { toast } = useToast();
 
-    const form = useForm<AddSupervisorFormData>({
+    const form = useForm<EditProfileFormData>({
         resolver: zodResolver(formSchema),
         mode: 'onChange',
     });
 
-    const onSubmit: SubmitHandler<AddSupervisorFormData> = async (data) => {
+    const onSubmit: SubmitHandler<EditProfileFormData> = async (data) => {
         try {
             setLoading(true);
-            const response = await axios.patch(`${REACT_APP_API_BASE}/user/profile`, data, {
+            const response = await apiClient.patch(`/user/profile`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -69,7 +71,7 @@ const EditProfileDialog: React.FC<EditProfileDialogProps> = ({ onUpdateProfile, 
                 description: 'Profile updated successfully',
             });
 
-            onUpdateProfile(updatedProfile);
+            onUpdateProfile?.(updatedProfile);
             setOpen(false);
         } catch (error: any) {
             toast({
@@ -102,125 +104,174 @@ const EditProfileDialog: React.FC<EditProfileDialogProps> = ({ onUpdateProfile, 
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
-                        action=""
                         className="max-h-96 overflow-y-scroll px-2 space-y-4"
                     >
-                        {/* Form Fields */}
                         <FormField
-                          control={form.control}
-                          name="firstName"
-                          defaultValue={user.profile.firstName}
-                          render={({ field }) => (
-                              <FormItem>
-                                  <FormLabel className="text-xs">First Name</FormLabel>
-                                  <FormControl>
-                                      <Input {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                              </FormItem>
-                          )}
+                            control={form.control}
+                            name="firstName"
+                            defaultValue={user.profile.firstName}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-xs">First Name</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
                         />
                         <FormField
-                          control={form.control}
-                          name="middleName"
-                          defaultValue={user.profile.middleName || ''}
-                          render={({ field }) => (
-                              <FormItem>
-                              <FormLabel className='text-xs'>MiddleName</FormLabel>
-                              <FormControl>
-                                  <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                              </FormItem>
-                          )}
+                            control={form.control}
+                            name="middleName"
+                            defaultValue={user.profile.middleName || ''}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-xs">Middle Name</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
                         />
                         <FormField
-                          control={form.control}
-                          name="lastName"
-                          defaultValue={user.profile.lastName}
-                          render={({ field }) => (
-                              <FormItem>
-                              <FormLabel className='text-xs'>LastName</FormLabel>
-                              <FormControl>
-                                  <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                              </FormItem>
-                          )}
+                            control={form.control}
+                            name="lastName"
+                            defaultValue={user.profile.lastName}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-xs">Last Name</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
                         />
-
-                        <FormField
-                          control={form.control}
-                          name="email"
-                          defaultValue={user.email}
-                          disabled
-                          render={({ field }) => (
-                              <FormItem>
-                              <FormLabel className='text-xs'>Email</FormLabel>
-                              <FormControl>
-                                  <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                              </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="matricNo"
-                          defaultValue={user.profile.matricNo}
-                          render={({ field }) => (
-                              <FormItem>
-                              <FormLabel className='text-xs'>MatricNo</FormLabel>
-                              <FormControl>
-                                  <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                              </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="institution"
-                          defaultValue={user.profile.institution || ''}
-                          render={({ field }) => (
-                              <FormItem>
-                              <FormLabel className='text-xs'>Institution</FormLabel>
-                              <FormControl>
-                                  <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                              </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="faculty"
-                          defaultValue={user.profile.faculty || ''}
-                          render={({ field }) => (
-                              <FormItem>
-                              <FormLabel className='text-xs'>Faculty</FormLabel>
-                              <FormControl>
-                                  <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                              </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="department"
-                          defaultValue={user.profile.department || ''}
-                          render={({ field }) => (
-                              <FormItem>
-                              <FormLabel className='text-xs'>Department</FormLabel>
-                              <FormControl>
-                                  <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                              </FormItem>
-                          )}
-                        />
+                        {role === 'STUDENT' && (
+                            <Fragment>
+                                <FormField
+                                    control={form.control}
+                                    name="matricNo"
+                                    defaultValue={user.profile.matricNo}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-xs">Matric No</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="institution"
+                                    defaultValue={user.profile.institution || ''}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-xs">Institution</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="faculty"
+                                    defaultValue={user.profile.faculty || ''}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-xs">Faculty</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="department"
+                                    defaultValue={user.profile.department || ''}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-xs">Department</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </Fragment>
+                        )}
+                        {role === 'INDUSTRY_SUPERVISOR' && (
+                            <Fragment>
+                                <FormField
+                                    control={form.control}
+                                    name="company"
+                                    defaultValue={user.profile.companyName || ''}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-xs">Company</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="position"
+                                    defaultValue={user.profile.position || ''}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-xs">Position</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </Fragment>
+                        )}
+                        {role === 'SCHOOL_SUPERVISOR' && (
+                            <Fragment>
+                                <FormField
+                                    control={form.control}
+                                    name="faculty"
+                                    defaultValue={user.profile.faculty || ''}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-xs">Faculty</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="position"
+                                    defaultValue={user.profile.position || ''}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-xs">Position</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </Fragment>
+                        )}
                         <Button type="submit" className="h-6 rounded-none text-xs" disabled={loading}>
                             {loading ? 'Updating...' : 'Update'}
                         </Button>
