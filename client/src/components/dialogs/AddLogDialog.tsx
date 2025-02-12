@@ -29,7 +29,7 @@ const formSchema = z.object({
     logDay: z.string(),
 })
 
-type AddSupervisorFormData = z.infer<typeof formSchema>;
+type AddLogFormData = z.infer<typeof formSchema>;
 
 interface AddLogDialogProps {
     mode?: 'add' | 'edit';
@@ -66,7 +66,7 @@ const AddLogDialog: React.FC<AddLogDialogProps> = ({ mode, log }) => {
     const { state, fetchLogs } = useDataOperations();
 
   
-    const form = useForm<AddSupervisorFormData>({
+    const form = useForm<AddLogFormData>({
       resolver: zodResolver(formSchema),
       mode: "onChange",
     });
@@ -75,7 +75,7 @@ const AddLogDialog: React.FC<AddLogDialogProps> = ({ mode, log }) => {
         fetchLogs();
     }
   
-    const onSubmit: SubmitHandler<AddSupervisorFormData> = async (data) => {
+    const onSubmit: SubmitHandler<AddLogFormData> = async (data) => {
       try {
         setLoading(true);
 

@@ -275,7 +275,7 @@ const Signup: React.FC = () => {
                 )}
 
                 {/* Submit Button */}
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-700" disabled={loading}>
                  {
                     loading
                     ? 'Signing up...'
@@ -289,15 +289,9 @@ const Signup: React.FC = () => {
         {/* Divider */}
         <hr className="my-4" />
 
-        {/* Social Signup */}
-        <div className="flex justify-center gap-4">
-          <Button variant="outline" className="w-full">
-            Google
-          </Button>
-          <Button variant="outline" className="w-full">
-            Facebook
-          </Button>
-        </div>
+        <Button variant={"link"} className="text-xs text-purple-700 mt-4 w-full" onClick={() => navigate("/login")}>
+          Already have an account? Sign in here
+        </Button>
 
         {/* Footer */}
         <p className="text-xs text-gray-400 text-center mt-4">

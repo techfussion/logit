@@ -76,11 +76,11 @@ const StudentReviews: React.FC = () => {
                 :
                 (
                     <div className='mt-6'>
+                        <h1 className='text-xs mb-4 text-gray-500 font-kayphodo'>Select a student</h1>
                         {
                             students.map((student, index) => 
                                 (
                                     <div key={index} className='mb-6'>
-                                        <h1 className='text-xs mb-4 text-gray-500 font-kayphodo'>Select a student</h1>
                                         <div className='w-full'>
                                             <Card className="border-none rounded-none flex justify-between w-full px-6 py-2 cursor-pointer hover:scale-105 duration-150"
                                                 onClick={() => navigate(`/engine/supervisor-school-reviews/${student.id}`)}
@@ -104,3 +104,4 @@ const StudentReviews: React.FC = () => {
 }
 
 export default StudentReviews;
+

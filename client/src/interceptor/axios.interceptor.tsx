@@ -10,14 +10,14 @@ export const setupAxiosInterceptors = (navigate: (url: string) => void) => {
     (response) => response,
     (error) => {
       // Check if the error is due to an unauthorized token (401)
-      if (error.response?.status === 401) {
+      // if (error.response?.status === 401) {
         // Clear user session
         // localStorage.removeItem('token');
         // localStorage.removeItem('user');
 
         // Navigate to unauthorized page
-        navigate('/unauthorized');
-      }
+      //   navigate('/unauthorized');
+      // }
 
       return Promise.reject(error);
     }

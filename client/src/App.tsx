@@ -33,6 +33,8 @@ import UnauthorizedPage from '@/pages/error/401.page';
 
 // Axios Client and Interceptors
 import { setupAxiosInterceptors } from './interceptor/axios.interceptor';
+import LoginPage from './pages/common/login/Page';
+import RegisterPage from './pages/common/register/Page';
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -46,7 +48,9 @@ const App: React.FC = () => {
       <DataProvider>
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
           <Route path="*" element={<NotFoundPage />} />
 

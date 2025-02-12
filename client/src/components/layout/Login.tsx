@@ -93,7 +93,7 @@ const Login: React.FC = () => {
             />
 
             {/* Submit Button */}
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-700" disabled={loading}>
               {
                 loading
                 ? 'Logging in...'
@@ -102,6 +102,9 @@ const Login: React.FC = () => {
             </Button>
           </form>
         </Form>
+        <Button variant={"link"} className="text-xs text-purple-700 mt-4 w-full" onClick={() => navigate("/register")}>
+          Don't have an account? Register here
+        </Button>
       </div>
     </main>
   );
